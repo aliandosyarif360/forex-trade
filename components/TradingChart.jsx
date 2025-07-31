@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import { createChart, CrosshairMode } from 'lightweight-charts';
 import { motion } from 'framer-motion';
 import { 
@@ -10,15 +10,18 @@ import {
   TrendingUp, 
   BarChart3,
   Activity,
-  RefreshCw
+  RefreshCw,
+  AlertTriangle
 } from 'lucide-react';
+import LoadingSpinner from './LoadingSpinner';
 
 const TradingChart = ({ 
   instrument = 'EUR_USD', 
   data = [], 
   onPriceUpdate,
   className = '',
-  height = 400 
+  height = 400,
+  onError
 }) => {
   const chartContainerRef = useRef();
   const chart = useRef();
@@ -28,12 +31,14 @@ const TradingChart = ({
   const [currentPrice, setCurrentPrice] = useState(null);
   const [priceChange, setPriceChange] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Konfigurasi chart dalam bahasa Indonesia
-  const chartOptions = {
+  // Chart configuration with memoization for performance
+  const chartOptions = useMemo(() => ({
     layout: {
       background: { type: 'solid', color: 'transparent' },
       textColor: '#d1d5db',
+      fontFamily: 'var(--font-geist-sans)',
     },
     grid: {
       vertLines: { color: '#374151' },
@@ -45,6 +50,7 @@ const TradingChart = ({
     rightPriceScale: {
       borderColor: '#374151',
       textColor: '#d1d5db',
+      autoScale: true,
     },
     timeScale: {
       borderColor: '#374151',
@@ -60,42 +66,55 @@ const TradingChart = ({
       color: 'rgba(171, 71, 188, 0.3)',
       text: 'OANDA MT5',
     },
-  };
+  }), []);
 
-  // Inisialisasi chart
+  // Initialize chart with error handling
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
-    chart.current = createChart(chartContainerRef.current, {
-      ...chartOptions,
-      width: chartContainerRef.current.clientWidth,
-      height: isFullscreen ? window.innerHeight - 100 : height,
-    });
+    try {
+      setIsLoading(true);
+      setError(null);
 
-    // Candlestick series
-    candleSeries.current = chart.current.addCandlestickSeries({
-      upColor: '#10b981',
-      downColor: '#ef4444',
-      borderDownColor: '#ef4444',
-      borderUpColor: '#10b981',
-      wickDownColor: '#ef4444',
-      wickUpColor: '#10b981',
-    });
+      chart.current = createChart(chartContainerRef.current, {
+        ...chartOptions,
+        width: chartContainerRef.current.clientWidth,
+        height: isFullscreen ? window.innerHeight - 100 : height,
+      });
 
-    // Volume series
-    volumeSeries.current = chart.current.addHistogramSeries({
-      color: '#6366f1',
-      priceFormat: {
-        type: 'volume',
-      },
-      priceScaleId: '',
-      scaleMargins: {
-        top: 0.8,
-        bottom: 0,
-      },
-    });
+      // Candlestick series
+      candleSeries.current = chart.current.addCandlestickSeries({
+        upColor: '#10b981',
+        downColor: '#ef4444',
+        borderDownColor: '#ef4444',
+        borderUpColor: '#10b981',
+        wickDownColor: '#ef4444',
+        wickUpColor: '#10b981',
+      });
 
-    // Handle resize
+      // Volume series
+      volumeSeries.current = chart.current.addHistogramSeries({
+        color: '#6366f1',
+        priceFormat: {
+          type: 'volume',
+        },
+        priceScaleId: '',
+        scaleMargins: {
+          top: 0.8,
+          bottom: 0,
+        },
+      });
+
+      setIsLoading(false);
+    } catch (err) {
+      console.error('Error initializing chart:', err);
+      setError('Failed to initialize chart. Please refresh the page.');
+      setIsLoading(false);
+      if (onError) onError(err);
+    }
+
+    // Handle resize with debouncing
+    let resizeTimeout;
     const handleResize = () => {
       if (chart.current && chartContainerRef.current) {
         chart.current.applyOptions({
@@ -185,6 +204,32 @@ const TradingChart = ({
     const sign = change >= 0 ? '+' : '';
     return `${sign}${change.toFixed(5)}`;
   };
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center bg-red-50 rounded-lg border border-red-200">
+        <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
+          <AlertTriangle className="w-8 h-8 text-red-400" />
+        </div>
+        <h3 className="text-lg font-semibold text-red-700 mb-2">Chart Error</h3>
+        <p className="text-gray-700 mb-4">{error}</p>
+        <button
+          onClick={() => setError(null)}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <span className="text-blue-600 animate-pulse">Loading chart...</span>
+      </div>
+    );
+  }
 
   return (
     <motion.div

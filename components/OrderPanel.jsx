@@ -32,6 +32,9 @@ const OrderPanel = ({
   const [isCalculating, setIsCalculating] = useState(false);
   const [orderSummary, setOrderSummary] = useState(null);
   const [riskPercent, setRiskPercent] = useState(2);
+  // Tambahkan state baru untuk error
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Kalkulasi margin dan risiko
   const calculateOrderDetails = () => {
@@ -152,6 +155,32 @@ const OrderPanel = ({
   const formatPrice = (price) => {
     return price.toFixed(5);
   };
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center bg-red-50 rounded-lg border border-red-200">
+        <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
+          <X className="w-8 h-8 text-red-400" />
+        </div>
+        <h3 className="text-lg font-semibold text-red-700 mb-2">Terjadi Kesalahan</h3>
+        <p className="text-gray-700 mb-4">{error}</p>
+        <button
+          onClick={() => setError(null)}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200"
+        >
+          Coba Lagi
+        </button>
+      </div>
+    );
+  }
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[200px]">
+        <span className="text-blue-600 animate-pulse">Memproses...</span>
+      </div>
+    );
+  }
 
   return (
     <motion.div
