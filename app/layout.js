@@ -38,6 +38,37 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  // Check if we're in demo mode
+  const isDemoMode = process.env.DEMO_MODE === 'true';
+  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+  // If no Clerk key is provided, show a demo mode message
+  if (!publishableKey || publishableKey.includes('demo')) {
+    return (
+      <html lang="en">
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-900 text-white`}>
+          <div className="min-h-screen flex items-center justify-center">
+            <div className="text-center p-8">
+              <h1 className="text-3xl font-bold text-blue-400 mb-4">ForexBot Pro</h1>
+              <p className="text-slate-300 mb-6">
+                Demo Mode - Please configure your Clerk and Supabase credentials
+              </p>
+              <div className="bg-slate-800 p-6 rounded-lg max-w-2xl mx-auto text-left">
+                <h2 className="text-xl font-semibold mb-4 text-blue-400">Setup Instructions:</h2>
+                <ol className="list-decimal list-inside space-y-2 text-slate-300">
+                  <li>Create a Clerk account at <a href="https://clerk.com" className="text-blue-400 hover:underline">clerk.com</a></li>
+                  <li>Create a Supabase project at <a href="https://supabase.com" className="text-blue-400 hover:underline">supabase.com</a></li>
+                  <li>Copy your API keys to <code className="bg-slate-700 px-2 py-1 rounded">.env.local</code></li>
+                  <li>Restart the development server</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+    );
+  }
+
   return (
     <ClerkProvider
       appearance={{
