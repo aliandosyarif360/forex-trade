@@ -54,6 +54,7 @@ export default function Dashboard() {
     winRate: 0,
     totalTrades: 0
   });
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Simulated data - in real app this would come from APIs
@@ -236,13 +237,27 @@ export default function Dashboard() {
     </motion.div>
   );
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center bg-red-50 rounded-lg border border-red-200 min-h-screen">
+        <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mb-4">
+          <AlertTriangle className="w-8 h-8 text-red-400" />
+        </div>
+        <h3 className="text-lg font-semibold text-red-700 mb-2">Dashboard Error</h3>
+        <p className="text-gray-700 mb-4">{error}</p>
+        <button
+          onClick={() => setError(null)}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="text-center">
-          <RefreshCw className="w-8 h-8 text-blue-400 animate-spin mx-auto mb-4" />
-          <p className="text-slate-400">Loading dashboard...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <span className="text-blue-600 animate-pulse">Loading dashboard...</span>
       </div>
     );
   }
