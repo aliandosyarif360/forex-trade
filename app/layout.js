@@ -22,76 +22,59 @@ export const metadata = {
   publisher: "ForexBot Pro",
   robots: "index, follow",
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://forexbot-pro.vercel.app",
     title: "ForexBot Pro - Professional Forex Trading Bot",
     description: "Advanced AI-powered forex trading bot with comprehensive risk management",
-    siteName: "ForexBot Pro",
+    type: "website",
+    locale: "id_ID",
+    siteName: "ForexBot Pro"
   },
   twitter: {
     card: "summary_large_image",
     title: "ForexBot Pro - Professional Forex Trading Bot",
-    description: "Advanced AI-powered forex trading bot with comprehensive risk management",
-    creator: "@forexbotpro",
-  },
+    description: "Advanced AI-powered forex trading bot"
+  }
 };
 
 export default function RootLayout({ children }) {
-  // Check if we're in demo mode
+  const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
   const isDemoMode = process.env.DEMO_MODE === 'true';
-  const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  const hasValidClerkKey = clerkPublishableKey && 
+                           !clerkPublishableKey.includes('demo') && 
+                           !clerkPublishableKey.includes('your_actual');
 
-  // If no Clerk key is provided, show a demo mode message
-  if (!publishableKey || publishableKey.includes('demo')) {
-    return (
-      <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-900 text-white`}>
-          <div className="min-h-screen flex items-center justify-center">
-            <div className="text-center p-8">
-              <h1 className="text-3xl font-bold text-blue-400 mb-4">ForexBot Pro</h1>
-              <p className="text-slate-300 mb-6">
-                Demo Mode - Please configure your Clerk and Supabase credentials
-              </p>
-              <div className="bg-slate-800 p-6 rounded-lg max-w-2xl mx-auto text-left">
-                <h2 className="text-xl font-semibold mb-4 text-blue-400">Setup Instructions:</h2>
-                <ol className="list-decimal list-inside space-y-2 text-slate-300">
-                  <li>Create a Clerk account at <a href="https://clerk.com" className="text-blue-400 hover:underline">clerk.com</a></li>
-                  <li>Create a Supabase project at <a href="https://supabase.com" className="text-blue-400 hover:underline">supabase.com</a></li>
-                  <li>Copy your API keys to <code className="bg-slate-700 px-2 py-1 rounded">.env.local</code></li>
-                  <li>Restart the development server</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </body>
-      </html>
-    );
+  if (!hasValidClerkKey) {
+    console.warn('Clerk authentication not properly configured. Please set up your Clerk keys.');
   }
 
   return (
     <ClerkProvider
+      publishableKey={clerkPublishableKey}
       appearance={{
         baseTheme: dark,
         variables: {
-          colorPrimary: "#3b82f6",
+          colorPrimary: "#10b981",
           colorBackground: "#0f172a",
+          colorText: "#f8fafc",
+          colorTextSecondary: "#94a3b8",
           colorInputBackground: "#1e293b",
-          colorInputText: "#f1f5f9",
+          colorInputText: "#f8fafc",
+          borderRadius: "8px",
         },
         elements: {
-          formButtonPrimary: 
-            "bg-blue-600 hover:bg-blue-700 text-sm normal-case",
-          card: "bg-slate-900 border border-slate-700",
-          headerTitle: "text-blue-400",
-          headerSubtitle: "text-slate-300",
-        }
+          formButtonPrimary: "bg-emerald-600 hover:bg-emerald-700 text-white",
+          card: "bg-slate-800 border border-slate-700",
+          headerTitle: "text-emerald-400",
+          headerSubtitle: "text-slate-400",
+          socialButtonsBlockButton: "bg-slate-700 hover:bg-slate-600 border border-slate-600",
+          socialButtonsBlockButtonText: "text-slate-200",
+          formFieldLabel: "text-slate-300",
+          formFieldInput: "bg-slate-700 border-slate-600 text-slate-200",
+          footerActionLink: "text-emerald-400 hover:text-emerald-300",
+        },
       }}
     >
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-900 text-white`}
-        >
+      <html lang="id" className={`${geistSans.variable} ${geistMono.variable}`}>
+        <body className="bg-slate-900 text-slate-100 antialiased">
           {children}
         </body>
       </html>
