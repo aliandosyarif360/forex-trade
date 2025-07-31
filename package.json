@@ -1,5 +1,5 @@
 {
-  "name": "platform-trading-oanda-mt5",
+  "name": "platform-trading-polygon",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "setup": "node scripts/setup.js",
-    "db:migrate": "supabase db push"
+    "db:migrate": "supabase db push",
+    "trading-bot": "node scripts/run-trading-bot.js",
+    "bot:start": "node scripts/run-trading-bot.js",
+    "bot:test": "node scripts/test-bot.js"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -47,8 +50,7 @@
     "ioredis": "^5.3.2",
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^4.7.1",
-    "oanda-api-v20": "^3.0.25",
-    "mt5-connector": "^1.0.0",
+    "node-telegram-bot-api": "^0.64.0",
     "trading-signals": "^3.8.0",
     "react-i18next": "^13.5.0",
     "i18next": "^23.7.6",

@@ -55,8 +55,8 @@ export default function Subscription() {
     },
     {
       icon: <TrendingUp className="w-5 h-5" />,
-      title: 'Data Real-time OANDA',
-      description: 'Koneksi langsung ke server OANDA tanpa delay'
+      title: 'Data Real-time Polygon',
+      description: 'Koneksi langsung ke server Polygon.io tanpa delay'
     },
     {
       icon: <Shield className="w-5 h-5" />,

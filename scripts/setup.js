@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Platform Trading OANDA MT5 Indonesia - Setup Script
+ * Platform Trading Polygon Indonesia - Setup Script
  * Script untuk setup initial platform dengan konfigurasi production-ready
  */
 
