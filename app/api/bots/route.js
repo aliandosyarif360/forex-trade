@@ -158,6 +158,19 @@ export async function POST(request) {
         message: `Trading bot "${name}" has been created successfully`,
         severity: 'low'
       });
+    } catch (engineError) {
+      console.error('Error initializing bot in trading engine:', engineError);
+      
+      // Clean up database entry if engine initialization fails
+      await supabaseAdmin
+        .from('trading_bots')
+        .delete()
+        .eq('id', bot.id);
+
+      return NextResponse.json({
+        error: 'Failed to initialize trading bot',
+        details: engineError.message
+      }, { status: 500 });
     }
 
     // Initialize bot performance record
@@ -182,26 +195,11 @@ export async function POST(request) {
       console.warn('Could not create bot performance record:', error.message);
     }
 
-      return NextResponse.json({
-        success: true,
-        data: bot,
-        message: 'Bot created successfully'
-      });
-
-    } catch (engineError) {
-      console.error('Error initializing bot in trading engine:', engineError);
-      
-      // Clean up database entry if engine initialization fails
-      await supabaseAdmin
-        .from('trading_bots')
-        .delete()
-        .eq('id', bot.id);
-
-      return NextResponse.json({
-        error: 'Failed to initialize trading bot',
-        details: engineError.message
-      }, { status: 500 });
-    }
+    return NextResponse.json({
+      success: true,
+      data: bot,
+      message: 'Bot created successfully'
+    });
 
   } catch (error) {
     console.error('POST /api/bots error:', error);
