@@ -55,8 +55,8 @@ export default function Subscription() {
     },
     {
       icon: <TrendingUp className="w-5 h-5" />,
-      title: 'Data Real-time OANDA',
-      description: 'Koneksi langsung ke server OANDA tanpa delay'
+              title: 'Data Real-time Polygon',
+        description: 'Koneksi langsung ke server Polygon tanpa delay'
     },
     {
       icon: <Shield className="w-5 h-5" />,
@@ -120,7 +120,7 @@ export default function Subscription() {
 
     // Format pesan WhatsApp
     const message = encodeURIComponent(
-      `🚀 *PEMESANAN PREMIUM PLATFORM TRADING OANDA MT5*\n\n` +
+      `🚀 *PEMESANAN PREMIUM PLATFORM TRADING POLYGON API*\n\n` +
       `👤 *Data Customer:*\n` +
       `• Nama: ${userInfo.name}\n` +
       `• Email: ${userInfo.email}\n` +
@@ -133,7 +133,7 @@ export default function Subscription() {
       `\n🎯 *Fitur Premium:*\n` +
       `• Scalping Bot Profesional (85%+ winrate)\n` +
       `• Visual Trading MT5 dengan 80+ indikator\n` +
-      `• Data real-time OANDA tanpa delay\n` +
+              `• Data real-time Polygon tanpa delay\n` +
       `• Risk management canggih\n` +
       `• Backtesting akurat 10+ tahun data\n` +
       `• Support premium 24/7\n\n` +
@@ -174,7 +174,7 @@ export default function Subscription() {
           </h1>
           
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Akses penuh ke platform trading OANDA MT5 dengan scalping bot profesional, 
+            Akses penuh ke platform trading Polygon API dengan scalping bot profesional, 
             data real-time, dan fitur premium lainnya untuk maksimalkan profit trading Anda.
           </p>
         </motion.div>

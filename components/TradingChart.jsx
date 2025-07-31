@@ -58,7 +58,7 @@ const TradingChart = ({
       horzAlign: 'left',
       vertAlign: 'top',
       color: 'rgba(171, 71, 188, 0.3)',
-      text: 'OANDA MT5',
+              text: 'Polygon API',
     },
   };
 

@@ -63,8 +63,8 @@ export default function Beranda() {
     },
     {
       icon: <Zap className="w-8 h-8" />,
-      title: "Eksekusi Real-time OANDA",
-      description: "Koneksi langsung ke OANDA dengan eksekusi order super cepat"
+              title: "Eksekusi Real-time Polygon",
+        description: "Koneksi langsung ke Polygon dengan eksekusi order super cepat"
     },
     {
       icon: <Target className="w-8 h-8" />,
@@ -103,7 +103,7 @@ export default function Beranda() {
     {
       nama: "Budi Santoso",
       profesi: "Trader Profesional",
-      komentar: "Platform terbaik yang pernah saya gunakan! Profit konsisten setiap bulan dengan OANDA MT5.",
+              komentar: "Platform terbaik yang pernah saya gunakan! Profit konsisten setiap bulan dengan Polygon API.",
       rating: 5,
       profit: "+285%"
     },
@@ -136,7 +136,7 @@ export default function Beranda() {
               Selamat Datang Kembali, {user?.firstName}!
             </h1>
             <p className="text-xl text-gray-300 mb-8">
-              Siap untuk melanjutkan trading dengan OANDA MT5?
+              Siap untuk melanjutkan trading dengan Polygon API?
             </p>
             <Link
               href="/dashboard"
@@ -165,12 +165,12 @@ export default function Beranda() {
             >
               <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
                 Platform Trading
-                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> OANDA MT5 </span>
+                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> Polygon API </span>
                 Terdepan di Indonesia
               </h1>
               <p className="text-xl text-gray-300 mb-8 leading-relaxed">
                 Rasakan pengalaman trading forex yang revolusioner dengan teknologi AI, 
-                interface visual yang menawan, dan integrasi langsung dengan OANDA MT5. 
+                interface visual yang menawan, dan integrasi langsung dengan Polygon API. 
                 Cocok untuk pemula hingga trader profesional.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -419,7 +419,7 @@ export default function Beranda() {
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
               Bergabunglah dengan ribuan trader sukses yang telah merasakan keuntungan 
-              dari platform OANDA MT5 terbaik di Indonesia
+                              dari platform Polygon API terbaik di Indonesia
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <SignUpButton mode="modal">
@@ -441,7 +441,7 @@ export default function Beranda() {
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-xl font-bold text-white mb-4">Platform Trading OANDA</h3>
+                              <h3 className="text-xl font-bold text-white mb-4">Platform Trading Polygon</h3>
               <p className="text-gray-400">
                 Platform trading forex terdepan dengan teknologi MT5 dan AI untuk trader Indonesia.
               </p>
@@ -474,7 +474,7 @@ export default function Beranda() {
             </div>
           </div>
           <div className="border-t border-slate-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Platform Trading OANDA MT5. Semua hak dilindungi.</p>
+                            <p>&copy; 2024 Platform Trading Polygon API. Semua hak dilindungi.</p>
           </div>
         </div>
       </footer>

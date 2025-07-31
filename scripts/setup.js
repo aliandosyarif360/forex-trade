@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Platform Trading OANDA MT5 Indonesia - Setup Script
+ * Platform Trading Polygon API Indonesia - Setup Script
  * Script untuk setup initial platform dengan konfigurasi production-ready
  */
 
@@ -24,13 +24,12 @@ class PlatformSetup {
       'NEXT_PUBLIC_SUPABASE_URL',
       'NEXT_PUBLIC_SUPABASE_ANON_KEY',
       'SUPABASE_SERVICE_ROLE_KEY',
-      'OANDA_API_KEY',
-      'OANDA_ACCOUNT_ID'
+      'POLYGON_API_KEY'
     ];
   }
 
   async run() {
-    console.log('\n🚀 Platform Trading OANDA MT5 Indonesia - Setup');
+    console.log('\n🚀 Platform Trading Polygon API Indonesia - Setup');
     console.log('=' .repeat(60));
     
     try {
@@ -39,7 +38,7 @@ class PlatformSetup {
       await this.setupEnvironment();
       await this.installDependencies();
       await this.setupDatabase();
-      await this.setupOANDA();
+      await this.setupPolygon();
       await this.setupClerk();
       await this.createDirectories();
       await this.generateKeys();
@@ -310,36 +309,32 @@ AUTO_UPDATE_ENABLED=false
     }
   }
 
-  async setupOANDA() {
-    console.log('\n💱 Testing OANDA connection...');
+  async setupPolygon() {
+    console.log('\n💱 Testing Polygon connection...');
     
     try {
-      // Test OANDA API connection
+      // Test Polygon API connection
       const testScript = `
         const axios = require('axios');
-        const baseUrl = '${this.config.oandaEnvironment === 'live' ? 'https://api-fxtrade.oanda.com' : 'https://api-fxpractice.oanda.com'}';
         
-        axios.get(baseUrl + '/v3/accounts/${this.config.oandaAccountId}', {
-          headers: {
-            'Authorization': 'Bearer ${this.config.oandaApiKey}',
-            'Content-Type': 'application/json'
-          }
+        axios.get('https://api.polygon.io/v2/snapshot/locale/global/markets/forex/tickers/C:EUR/USD/snapshot', {
+          params: { apikey: '${this.config.polygonApiKey}' }
         }).then(response => {
-          console.log('✅ OANDA connection successful');
-          console.log('   Account Currency:', response.data.account.currency);
-          console.log('   Account Balance:', response.data.account.balance);
+          console.log('✅ Polygon connection successful');
+          console.log('   Symbol:', response.data.results.ticker);
+          console.log('   Status:', response.data.results.session ? 'Active' : 'Inactive');
         }).catch(error => {
-          console.log('❌ OANDA connection failed:', error.response?.data?.errorMessage || error.message);
+          console.log('❌ Polygon connection failed:', error.response?.data?.error || error.message);
         });
       `;
       
-      fs.writeFileSync('temp_test_oanda.js', testScript);
-      execSync('node temp_test_oanda.js', { stdio: 'inherit' });
-      fs.unlinkSync('temp_test_oanda.js');
+      fs.writeFileSync('temp_test_polygon.js', testScript);
+      execSync('node temp_test_polygon.js', { stdio: 'inherit' });
+      fs.unlinkSync('temp_test_polygon.js');
       
     } catch (error) {
-      console.log('⚠️  OANDA connection test gagal:', error.message);
-      console.log('   Pastikan API Key dan Account ID benar');
+      console.log('⚠️  Polygon connection test gagal:', error.message);
+      console.log('   Pastikan API Key benar');
     }
   }
 
