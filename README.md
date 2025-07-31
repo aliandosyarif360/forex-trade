@@ -1,20 +1,20 @@
-# Platform Trading OANDA MT5 Indonesia
+# Platform Trading Polygon Forex Indonesia
 
-Platform trading forex terdepan dengan integrasi OANDA dan teknologi MT5 untuk trader Indonesia. Dilengkapi dengan visual trading yang menawan, backtesting akurat, dan interface responsif dalam bahasa Indonesia.
+Platform trading forex terdepan dengan integrasi Polygon API dan backtesting engine yang realistis untuk trader Indonesia. Dilengkapi dengan visual trading yang menawan, backtesting akurat dengan simulasi kondisi market yang sebenarnya, dan interface responsif dalam bahasa Indonesia.
 
 ## 🚀 Features
 
 ### Real Market Data Integration
-- **Multiple Data Providers**: Alpha Vantage, Twelve Data, Finhub, OANDA
-- **Real-time Streaming**: WebSocket connections for live price updates
-- **Historical Data**: Comprehensive historical data for backtesting
-- **Data Caching**: Intelligent caching system for optimal performance
+- **Polygon API**: Real-time forex data dengan akurasi tinggi
+- **Historical Data**: Data historis lengkap untuk backtesting
+- **Market Sentiment**: Analisis sentiment market real-time
+- **Data Caching**: Intelligent caching system untuk performa optimal
 
-### Real Broker Integration
-- **OANDA**: Full API integration with demo and live accounts
-- **FXCM**: Complete trading API support
-- **IG Markets**: Professional trading platform integration
-- **Real Order Execution**: Actual trade placement and management
+### Realistic Backtesting Engine
+- **Market Hours Simulation**: Simulasi jam trading forex yang akurat
+- **Spread & Slippage**: Simulasi spread dan slippage yang realistis
+- **Risk Management**: Sistem risk management yang proper
+- **Commission Simulation**: Simulasi commission trading yang akurat
 
 ### Advanced Trading Strategies
 - **Scalping**: High-frequency trading with precise entry/exit
@@ -47,7 +47,8 @@ Platform trading forex terdepan dengan integrasi OANDA dan teknologi MT5 untuk t
 - **Database**: Supabase (PostgreSQL)
 - **Authentication**: Clerk
 - **Real-time**: Socket.io, WebSockets
-- **Trading**: CCXT, Technical Indicators
+- **Market Data**: Polygon API
+- **Trading**: Technical Indicators, Realistic Backtesting
 - **Notifications**: Nodemailer, Twilio
 - **Queue Management**: Bull, Redis
 - **Logging**: Winston
@@ -91,9 +92,8 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-# Required: Market Data (at least one)
-ALPHA_VANTAGE_API_KEY=your_alpha_vantage_key
-TWELVE_DATA_API_KEY=your_twelve_data_key
+# Required: Market Data
+POLYGON_API_KEY=your_polygon_api_key
 
 # Required: Email Notifications
 SMTP_HOST=smtp.gmail.com
@@ -104,10 +104,6 @@ SMTP_PASS=your_app_password
 TWILIO_ACCOUNT_SID=your_twilio_sid
 TWILIO_AUTH_TOKEN=your_twilio_token
 TWILIO_PHONE_NUMBER=+1234567890
-
-# Optional: Broker Integration
-OANDA_API_KEY=your_oanda_key
-FXCM_API_KEY=your_fxcm_key
 ```
 
 ### 4. Database Setup
@@ -130,33 +126,29 @@ Visit [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## 🔧 Configuration
 
-### Market Data Providers
+### Market Data Provider
 
-The bot supports multiple market data providers for redundancy:
+#### Polygon API
+1. Sign up at [polygon.io](https://polygon.io/)
+2. Get API key from dashboard
+3. Free tier available with limited requests
+4. Premium plans for higher rate limits
 
-1. **Alpha Vantage** (Free tier available)
-   - Sign up at [alphavantage.co](https://www.alphavantage.co/)
-   - Get API key from dashboard
+### Backtesting Features
 
-2. **Twelve Data** (Free tier available)
-   - Sign up at [twelvedata.com](https://twelvedata.com/)
-   - Get API key from dashboard
+#### Realistic Simulation
+- **Market Hours**: Simulasi jam trading forex 24/5
+- **Spread Simulation**: Spread yang realistis berdasarkan volatility
+- **Slippage**: Simulasi slippage yang akurat
+- **Commission**: Simulasi commission trading
+- **Risk Management**: Sistem risk management yang proper
 
-3. **Finhub** (Free tier available)
-   - Sign up at [finnhub.io](https://finnhub.io/)
-   - Get API key from dashboard
-
-### Broker Integration
-
-#### OANDA
-1. Create account at [oanda.com](https://www.oanda.com/)
-2. Generate API key from account settings
-3. Use demo account for testing
-
-#### FXCM
-1. Create account at [fxcm.com](https://www.fxcm.com/)
-2. Generate API credentials
-3. Use demo account for testing
+#### Technical Analysis
+- **RSI**: Relative Strength Index
+- **SMA/EMA**: Simple dan Exponential Moving Averages
+- **ATR**: Average True Range untuk volatility
+- **ADX**: Average Directional Index untuk trend strength
+- **Volume Analysis**: Analisis volume untuk konfirmasi
 
 ### Email Notifications
 
