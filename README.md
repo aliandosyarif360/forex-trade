@@ -1,6 +1,6 @@
-# Platform Trading OANDA MT5 Indonesia
+# Platform Trading Polygon Indonesia
 
-Platform trading forex terdepan dengan integrasi OANDA dan teknologi MT5 untuk trader Indonesia. Dilengkapi dengan visual trading yang menawan, backtesting akurat, dan interface responsif dalam bahasa Indonesia.
+Platform trading saham US terdepan dengan integrasi Polygon.io untuk trader Indonesia. Dilengkapi dengan visual trading yang menawan, data real-time akurat, dan interface responsif dalam bahasa Indonesia.
 
 ## 🚀 Features
 
