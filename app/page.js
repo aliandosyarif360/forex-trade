@@ -19,7 +19,8 @@ import {
   Activity,
   Globe,
   Smartphone,
-  Monitor
+  Monitor,
+  AlertTriangle
 } from 'lucide-react';
 
 export default function Beranda() {
@@ -30,8 +31,23 @@ export default function Beranda() {
     tingkatSukses: 0,
     totalKeuntungan: 0
   });
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
   useEffect(() => {
+    // Check if we're in demo mode
+    const checkDemoMode = async () => {
+      try {
+        const response = await fetch('/api/health');
+        const data = await response.json();
+        setIsDemoMode(data.environment?.app?.demoMode || false);
+      } catch (error) {
+        console.log('Demo mode check failed:', error);
+        setIsDemoMode(true);
+      }
+    };
+
+    checkDemoMode();
+
     // Simulasi loading statistik
     const timer = setTimeout(() => {
       setStatistik({
@@ -63,8 +79,8 @@ export default function Beranda() {
     },
     {
       icon: <Zap className="w-8 h-8" />,
-      title: "Eksekusi Real-time OANDA",
-      description: "Koneksi langsung ke OANDA dengan eksekusi order super cepat"
+      title: "Eksekusi Real-time Polygon",
+      description: "Koneksi langsung ke Polygon.io dengan eksekusi order super cepat"
     },
     {
       icon: <Target className="w-8 h-8" />,
@@ -99,138 +115,114 @@ export default function Beranda() {
     }
   ];
 
-  const testimoni = [
-    {
-      nama: "Budi Santoso",
-      profesi: "Trader Profesional",
-      komentar: "Platform terbaik yang pernah saya gunakan! Profit konsisten setiap bulan dengan OANDA MT5.",
-      rating: 5,
-      profit: "+285%"
-    },
-    {
-      nama: "Sari Dewi",
-      profesi: "Ibu Rumah Tangga",
-      komentar: "Mudah digunakan bahkan untuk pemula. Interface Indonesia membantu sekali!",
-      rating: 5,
-      profit: "+156%"
-    },
-    {
-      nama: "Ahmad Rizki",
-      profesi: "Karyawan Swasta", 
-      komentar: "Backtesting yang akurat membantu saya memilih strategi terbaik. Highly recommended!",
-      rating: 5,
-      profit: "+198%"
-    }
-  ];
+  // Demo mode warning component
+  const DemoWarning = () => (
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4 mb-8"
+    >
+      <div className="flex items-center gap-3">
+        <AlertTriangle className="w-5 h-5 text-yellow-400" />
+        <div>
+          <h3 className="font-semibold text-yellow-400">Demo Mode Active</h3>
+          <p className="text-sm text-yellow-300">
+            This is a demo version. Please configure your Clerk and Supabase credentials for full functionality.
+          </p>
+        </div>
+      </div>
+    </motion.div>
+  );
 
-  if (isSignedIn) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-        <div className="container mx-auto px-6 py-12">
+  return (
+    <div className="min-h-screen bg-slate-900">
+      {/* Demo Warning */}
+      {isDemoMode && <DemoWarning />}
+
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-slate-900 to-slate-900"></div>
+        <div className="relative z-10 container mx-auto px-4 py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <h1 className="text-4xl font-bold text-white mb-4">
-              Selamat Datang Kembali, {user?.firstName}!
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                ForexBot Pro
+              </span>
             </h1>
-            <p className="text-xl text-gray-300 mb-8">
-              Siap untuk melanjutkan trading dengan OANDA MT5?
+            <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto">
+              Platform Trading Forex Canggih dengan AI dan Analisis Real-time
             </p>
-            <Link
-              href="/dashboard"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              Buka Dashboard Trading
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              {!isSignedIn ? (
+                <>
+                  <SignUpButton mode="modal">
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+                      Mulai Trading
+                    </button>
+                  </SignUpButton>
+                  <SignInButton mode="modal">
+                    <button className="border border-slate-600 text-slate-300 hover:bg-slate-800 px-8 py-3 rounded-lg font-semibold transition-colors">
+                      Masuk
+                    </button>
+                  </SignInButton>
+                </>
+              ) : (
+                <Link href="/dashboard">
+                  <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+                    Dashboard
+                  </button>
+                </Link>
+              )}
+            </div>
           </motion.div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20" />
-        <div className="container mx-auto px-6 py-20 relative">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h1 className="text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
-                Platform Trading
-                <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> OANDA MT5 </span>
-                Terdepan di Indonesia
-              </h1>
-              <p className="text-xl text-gray-300 mb-8 leading-relaxed">
-                Rasakan pengalaman trading forex yang revolusioner dengan teknologi AI, 
-                interface visual yang menawan, dan integrasi langsung dengan OANDA MT5. 
-                Cocok untuk pemula hingga trader profesional.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <SignUpButton mode="modal">
-                  <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center">
-                    Mulai Trading Gratis
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </button>
-                </SignUpButton>
-                <SignInButton mode="modal">
-                  <button className="px-8 py-4 border-2 border-white/20 text-white font-semibold rounded-lg hover:bg-white/10 transition-all duration-300">
-                    Masuk ke Akun
-                  </button>
-                </SignInButton>
-              </div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
-                <h3 className="text-2xl font-bold text-white mb-6">Statistik Platform</h3>
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-400 mb-2">
-                      {statistik.totalPengguna.toLocaleString('id-ID')}+
-                    </div>
-                    <div className="text-gray-300">Trader Aktif</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-green-400 mb-2">
-                      {statistik.totalTrade.toLocaleString('id-ID')}+
-                    </div>
-                    <div className="text-gray-300">Trade Sukses</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-purple-400 mb-2">
-                      {statistik.tingkatSukses}%
-                    </div>
-                    <div className="text-gray-300">Win Rate</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-yellow-400 mb-2">
-                      ${statistik.totalKeuntungan.toLocaleString('id-ID')}
-                    </div>
-                    <div className="text-gray-300">Total Profit</div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
         </div>
       </section>
 
-      {/* Fitur Utama */}
-      <section className="py-20 bg-slate-800/50">
-        <div className="container mx-auto px-6">
+      {/* Stats Section */}
+      <section className="py-16 bg-slate-800/50">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+          >
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-400 mb-2">
+                {statistik.totalPengguna.toLocaleString()}+
+              </div>
+              <div className="text-slate-400">Pengguna Aktif</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-400 mb-2">
+                {statistik.totalTrade.toLocaleString()}+
+              </div>
+              <div className="text-slate-400">Trade Berhasil</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-yellow-400 mb-2">
+                {statistik.tingkatSukses}%
+              </div>
+              <div className="text-slate-400">Tingkat Sukses</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-purple-400 mb-2">
+                ${statistik.totalKeuntungan.toLocaleString()}+
+              </div>
+              <div className="text-slate-400">Total Profit</div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -238,34 +230,40 @@ export default function Beranda() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-white mb-4">
-              Fitur Unggulan Platform
+              Fitur Unggulan
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Dilengkapi dengan teknologi terdepan untuk memberikan pengalaman trading terbaik
+            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+              Platform trading forex terlengkap dengan teknologi AI terdepan
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {fitur.map((item, index) => (
+            {fitur.map((fitur, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:border-blue-400/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/20"
+                className="bg-slate-800 p-6 rounded-lg border border-slate-700 hover:border-blue-500/50 transition-colors"
               >
-                <div className="text-blue-400 mb-4">{item.icon}</div>
-                <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
-                <p className="text-gray-300 leading-relaxed">{item.description}</p>
+                <div className="text-blue-400 mb-4">
+                  {fitur.icon}
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">
+                  {fitur.title}
+                </h3>
+                <p className="text-slate-300">
+                  {fitur.description}
+                </p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Strategi Trading */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
+      {/* Trading Strategies */}
+      <section className="py-20 bg-slate-800/50">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -273,10 +271,10 @@ export default function Beranda() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-bold text-white mb-4">
-              Strategi Trading Teruji
+              Strategi Trading
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Pilih strategi yang sesuai dengan gaya trading dan target profit Anda
+            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
+              Pilih strategi yang sesuai dengan gaya trading Anda
             </p>
           </motion.div>
 
@@ -287,197 +285,54 @@ export default function Beranda() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 border border-slate-700 hover:border-blue-400/50 transition-all duration-300"
+                className="bg-slate-900 p-6 rounded-lg border border-slate-700"
               >
-                <h3 className="text-2xl font-bold text-white mb-3">{strategi.nama}</h3>
-                <p className="text-gray-300 mb-6">{strategi.deskripsi}</p>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Win Rate:</span>
-                    <span className="text-green-400 font-semibold">{strategi.winRate}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Profit/Bulan:</span>
-                    <span className="text-blue-400 font-semibold">{strategi.profitBulanan}</span>
-                  </div>
+                <h3 className="text-xl font-semibold text-white mb-3">
+                  {strategi.nama}
+                </h3>
+                <p className="text-slate-300 mb-4">
+                  {strategi.deskripsi}
+                </p>
+                <div className="flex justify-between text-sm">
+                  <span className="text-green-400">Win Rate: {strategi.winRate}</span>
+                  <span className="text-blue-400">Profit: {strategi.profitBulanan}</span>
                 </div>
               </motion.div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimoni */}
-      <section className="py-20 bg-slate-800/50">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-4">
-              Apa Kata Trader Indonesia
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Ribuan trader telah merasakan keuntungan dari platform kami
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimoni.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-xl p-6 border border-white/20"
-              >
-                <div className="flex items-center mb-4">
-                  <div className="flex text-yellow-400">
-                    {[...Array(item.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 fill-current" />
-                    ))}
-                  </div>
-                  <span className="ml-2 text-green-400 font-semibold">{item.profit}</span>
-                </div>
-                <p className="text-gray-300 mb-4 italic">"{item.komentar}"</p>
-                <div>
-                  <div className="font-semibold text-white">{item.nama}</div>
-                  <div className="text-gray-400 text-sm">{item.profesi}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Responsive Design Showcase */}
-      <section className="py-20">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-4">
-              Trading Di Mana Saja, Kapan Saja
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Platform responsif yang sempurna di desktop, tablet, dan mobile
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/20"
-            >
-              <Monitor className="w-16 h-16 text-blue-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">Desktop</h3>
-              <p className="text-gray-300">Interface lengkap dengan semua fitur advanced trading</p>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/20"
-            >
-              <Smartphone className="w-16 h-16 text-purple-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">Mobile</h3>
-              <p className="text-gray-300">Trading on-the-go dengan interface yang dioptimalkan</p>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-lg rounded-xl p-8 border border-white/20"
-            >
-              <Globe className="w-16 h-16 text-green-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">Web-Based</h3>
-              <p className="text-gray-300">Akses langsung dari browser tanpa instalasi</p>
-            </motion.div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="container mx-auto px-6 text-center">
+      <section className="py-20">
+        <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl font-bold text-white mb-4">
-              Siap Memulai Perjalanan Trading Anda?
+            <h2 className="text-4xl font-bold text-white mb-6">
+              Siap Memulai Trading?
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Bergabunglah dengan ribuan trader sukses yang telah merasakan keuntungan 
-              dari platform OANDA MT5 terbaik di Indonesia
+            <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+              Bergabunglah dengan ribuan trader yang telah mempercayai ForexBot Pro
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {!isSignedIn ? (
               <SignUpButton mode="modal">
-                <button className="px-8 py-4 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center">
-                  Daftar Sekarang - GRATIS
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
+                  Daftar Sekarang
                 </button>
               </SignUpButton>
-              <button className="px-8 py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10 transition-all duration-300">
-                Demo Trading
-              </button>
-            </div>
+            ) : (
+              <Link href="/dashboard">
+                <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
+                  Masuk ke Dashboard
+                </button>
+              </Link>
+            )}
           </motion.div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="bg-slate-900 py-12">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <h3 className="text-xl font-bold text-white mb-4">Platform Trading OANDA</h3>
-              <p className="text-gray-400">
-                Platform trading forex terdepan dengan teknologi MT5 dan AI untuk trader Indonesia.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Fitur</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>Trading Otomatis</li>
-                <li>Analisis Visual</li>
-                <li>Backtesting</li>
-                <li>Risk Management</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Dukungan</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>Panduan Trading</li>
-                <li>Video Tutorial</li>
-                <li>Customer Support</li>
-                <li>FAQ</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Kontak</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>support@tradingplatform.id</li>
-                <li>+62 21 1234 5678</li>
-                <li>Jakarta, Indonesia</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-slate-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Platform Trading OANDA MT5. Semua hak dilindungi.</p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
